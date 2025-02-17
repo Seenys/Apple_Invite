@@ -34,7 +34,7 @@ const MarqueeItem: FC<MarqueeItemProps> = ({
 
   const animatedStyle = useAnimatedStyle(() => {
     const position = ((initialPosition - scroll.value) % containerWidth) + shift;
-    const rotation = interpolate(position, [0, screenWidth - itemWidth], [-0.5, 0.5]);
+    const rotation = interpolate(position, [0, screenWidth - itemWidth], [-0.3, 0.3]);
     const translateY = interpolate(
       position,
       [0, (screenWidth - itemWidth) / 2, screenWidth - itemWidth],
@@ -50,7 +50,7 @@ const MarqueeItem: FC<MarqueeItemProps> = ({
   return (
     <Animated.View
       style={[{ width: itemWidth, transformOrigin: 'bottom' }, animatedStyle]}
-      className="absolute h-full p-2 ">
+      className="absolute h-full p-5 ">
       <Image source={item.image} className="h-full w-full rounded-3xl  shadow-lg shadow-black" />
     </Animated.View>
   );
