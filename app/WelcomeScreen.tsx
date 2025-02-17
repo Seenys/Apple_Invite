@@ -49,8 +49,8 @@ const WelcomeScreen = () => {
         className="absolute h-full w-full"
         resizeMode="cover"
         blurRadius={9}
-        entering={FadeIn.duration(1500)}
-        exiting={FadeOut.duration(1500)}
+        entering={FadeIn.duration(1000)}
+        exiting={FadeOut.duration(1000)}
       />
       <View className="absolute h-full w-full bg-black/30" />
 
@@ -58,7 +58,7 @@ const WelcomeScreen = () => {
         <Animated.View
           className="h-3/5 w-full"
           entering={SlideInUp.duration(1500).springify().mass(1).damping(30)}>
-          <Marquee events={initialData} />
+          <Marquee events={initialData} onIndexChange={setActiveIndex} />
         </Animated.View>
 
         <View className="flex-1 justify-center gap-4 p-4">

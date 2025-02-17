@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Image, useWindowDimensions, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -9,6 +9,8 @@ import Animated, {
   withTiming,
   Easing,
   interpolate,
+  useAnimatedReaction,
+  runOnJS,
 } from 'react-native-reanimated';
 
 interface MarqueeItemProps {
@@ -56,19 +58,39 @@ const MarqueeItem: FC<MarqueeItemProps> = ({
   );
 };
 
-const Marquee = ({ events }: { events: any[] }) => {
+const Marquee = ({
+  events,
+  onIndexChange,
+}: {
+  events: any[];
+  onIndexChange?: (index: number) => void;
+}) => {
   const scroll = useSharedValue(0);
   const scrollSpeed = useSharedValue(50);
   const { width: screenWidth } = useWindowDimensions();
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const itemWidth = screenWidth * 0.8;
 
   const contentWidth = itemWidth * events.length;
 
+  useEffect(() => {
+    onIndexChange && onIndexChange(activeIndex);
+  }, [activeIndex]);
+
   useFrameCallback((frameInfo) => {
     const deltaTime = (frameInfo.timeSincePreviousFrame ?? 0) / 1000;
     scroll.value = scroll.value + scrollSpeed.value * deltaTime;
   });
+
+  useAnimatedReaction(
+    () => scroll.value,
+    (value) => {
+      const normalized = (value + screenWidth / 2) % contentWidth;
+      const activeIndex = Math.floor(normalized / itemWidth);
+      runOnJS(setActiveIndex)(activeIndex);
+    }
+  );
 
   const gesture = Gesture.Pan()
     .onBegin(() => {
