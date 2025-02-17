@@ -3,6 +3,8 @@ import { Image, Pressable, ScrollView, Text, View } from 'react-native';
 import Animated, { FadeIn, FadeInUp, FadeOut, SlideInUp } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import Marquee from '~/components/Marquee';
+
 const initialData = [
   {
     id: 1,
@@ -40,7 +42,7 @@ const WelcomeScreen = () => {
   };
 
   return (
-    <View className="flex-1 items-center">
+    <View className="h-full flex-1">
       <Animated.Image
         key={initialData[activeIndex].image}
         source={initialData[activeIndex].image}
@@ -56,16 +58,7 @@ const WelcomeScreen = () => {
         <Animated.View
           className="h-3/5 w-full"
           entering={SlideInUp.duration(1500).springify().mass(1).damping(30)}>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {initialData.map((item) => (
-              <View key={item.id} className=" h-full  w-96 p-5  ">
-                <Image
-                  source={item.image}
-                  className="h-full w-full rounded-3xl  shadow-lg shadow-black"
-                />
-              </View>
-            ))}
-          </ScrollView>
+          <Marquee events={initialData} />
         </Animated.View>
 
         <View className="flex-1 justify-center gap-4 p-4">
@@ -74,7 +67,11 @@ const WelcomeScreen = () => {
             entering={FadeInUp.delay(500).springify().mass(2).damping(30)}>
             Welcome to
           </Animated.Text>
-          <Text className="text-center text-6xl font-bold text-white">Invite Event</Text>
+          <Animated.Text
+            className="text-center text-6xl font-bold text-white"
+            entering={FadeInUp.springify().mass(3).damping(30)}>
+            Invite Event
+          </Animated.Text>
           <Animated.Text
             className="mb-5 text-center text-2xl font-bold text-white/60"
             entering={FadeInUp.delay(500).springify().mass(2).damping(30)}>
