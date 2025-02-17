@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Image, View } from 'react-native';
+import { Image, useWindowDimensions, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   SharedValue,
@@ -10,20 +10,31 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 
-const itemWidth = 250;
-
 interface MarqueeItemProps {
   item: any;
   index: number;
   scroll: SharedValue<number>;
+  containerWidth: number;
+  itemWidth: number;
+  screenWidth: number;
 }
 
-const MarqueeItem: FC<MarqueeItemProps> = ({ item, index, scroll }) => {
-  const initialPosition = itemWidth * index;
+const MarqueeItem: FC<MarqueeItemProps> = ({
+  item,
+  index,
+  scroll,
+  containerWidth,
+  screenWidth,
+  itemWidth,
+}) => {
+  const shift = (containerWidth - screenWidth) / 2;
+
+  const initialPosition = itemWidth * index - shift;
 
   const animatedStyle = useAnimatedStyle(() => {
+    const position = ((initialPosition - scroll.value) % containerWidth) + shift;
     return {
-      left: initialPosition - scroll.value,
+      left: position,
     };
   });
 
@@ -37,6 +48,11 @@ const MarqueeItem: FC<MarqueeItemProps> = ({ item, index, scroll }) => {
 const Marquee = ({ events }: { events: any[] }) => {
   const scroll = useSharedValue(0);
   const scrollSpeed = useSharedValue(50);
+  const { width: screenWidth } = useWindowDimensions();
+
+  const itemWidth = screenWidth * 0.8;
+
+  const contentWidth = itemWidth * events.length;
 
   useFrameCallback((frameInfo) => {
     const deltaTime = (frameInfo.timeSincePreviousFrame ?? 0) / 1000;
@@ -60,7 +76,15 @@ const Marquee = ({ events }: { events: any[] }) => {
     <GestureDetector gesture={gesture}>
       <View className="h-full flex-row">
         {events.map((item, index) => (
-          <MarqueeItem key={item.id} scroll={scroll} index={index} item={item} />
+          <MarqueeItem
+            key={item.id}
+            itemWidth={itemWidth}
+            screenWidth={screenWidth}
+            containerWidth={contentWidth}
+            scroll={scroll}
+            index={index}
+            item={item}
+          />
         ))}
       </View>
     </GestureDetector>
