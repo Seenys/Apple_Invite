@@ -1,5 +1,5 @@
-import { FC, useEffect, useState } from 'react';
-import { Image, useWindowDimensions, View } from 'react-native';
+import React, { FC, PropsWithChildren, useEffect, useState } from 'react';
+import { useWindowDimensions, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   SharedValue,
@@ -14,7 +14,6 @@ import Animated, {
 } from 'react-native-reanimated';
 
 interface MarqueeItemProps {
-  item: any;
   index: number;
   scroll: SharedValue<number>;
   containerWidth: number;
@@ -22,13 +21,13 @@ interface MarqueeItemProps {
   screenWidth: number;
 }
 
-const MarqueeItem: FC<MarqueeItemProps> = ({
-  item,
+const MarqueeItem: FC<PropsWithChildren<MarqueeItemProps>> = ({
   index,
   scroll,
   containerWidth,
   screenWidth,
   itemWidth,
+  children,
 }) => {
   const shift = (containerWidth - screenWidth) / 2;
 
@@ -53,7 +52,7 @@ const MarqueeItem: FC<MarqueeItemProps> = ({
     <Animated.View
       style={[{ width: itemWidth, transformOrigin: 'bottom' }, animatedStyle]}
       className="absolute h-full p-5 ">
-      <Image source={item.image} className="h-full w-full rounded-3xl  shadow-lg shadow-black" />
+      {children}
     </Animated.View>
   );
 };
@@ -61,9 +60,11 @@ const MarqueeItem: FC<MarqueeItemProps> = ({
 const Marquee = ({
   events,
   onIndexChange,
+  renderItem,
 }: {
   events: any[];
   onIndexChange?: (index: number) => void;
+  renderItem: ({ item, index }: { item: any; index: number }) => React.ReactNode;
 }) => {
   const scroll = useSharedValue(0);
   const scrollSpeed = useSharedValue(50);
@@ -115,9 +116,9 @@ const Marquee = ({
             screenWidth={screenWidth}
             containerWidth={contentWidth}
             scroll={scroll}
-            index={index}
-            item={item}
-          />
+            index={index}>
+            {renderItem({ item, index })}
+          </MarqueeItem>
         ))}
       </View>
     </GestureDetector>
