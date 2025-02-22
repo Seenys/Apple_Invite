@@ -1,13 +1,20 @@
-import { LinearGradient } from 'expo-linear-gradient';
-import { Text, View, StyleSheet, Pressable } from 'react-native';
-import { Container } from '~/components/Container';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
+import { Text, View, StyleSheet, Pressable } from 'react-native';
+
+import { Container } from '~/components/Container';
+import RandomGradient from '~/utils/gradient';
 
 const Create = () => {
+  const gradient: string[] = RandomGradient(2);
+
   return (
     <View className="h-full flex-1 bg-white">
-      <LinearGradient colors={['#FFA07A', '#FF6347']} style={StyleSheet.absoluteFill} />
+      <LinearGradient
+        colors={gradient as [string, string, ...string[]]}
+        style={StyleSheet.absoluteFill}
+      />
       <Container>
         <View className="flex-row items-center justify-between">
           <Ionicons
