@@ -1,13 +1,13 @@
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import { Text, View, StyleSheet, Pressable } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Container } from '~/components/Container';
 import RandomGradient from '~/utils/gradient';
 
 const Create = () => {
-  const gradient: string[] = RandomGradient(2);
+  const gradient: string[] = RandomGradient(3);
 
   return (
     <View className="h-full flex-1 bg-white">
@@ -28,9 +28,35 @@ const Create = () => {
             <Text className="font-bold text-zinc-900"> Preview</Text>
           </Pressable>
         </View>
-        <View className="flex-1 justify-center gap-4 p-4">
-          <Text className="text-center text-2xl font-bold text-black">Create an Event</Text>
-          <Text className="text-center text-xl font-bold text-black/60">Coming soon!</Text>
+        <View className="h-1/2 w-full items-center justify-center ">
+          <Ionicons
+            className="bg-white/20 rounded-full p-2"
+            name="image"
+            size={42}
+            color="rgba(255,255,255,0.7)"
+          />
+          <Pressable className="rounded-full bg-white/20 p-3 px-6 mt-4">
+            <Text className="font-bold text-white"> Add Image</Text>
+          </Pressable>
+        </View>
+        <View className="rounded-3xl border border-white/15 overflow-hidden">
+          <View className="bg-zinc-700/10 ">
+            <View className="border-b border-white/20 p-4">
+              <TextInput
+                placeholder="Event title"
+                placeholderTextColor="rgba(255,255,255,0.5)"
+                className=" text-center text-white font-bold text-4xl"
+              />
+            </View>
+            <View className="border-b border-white/20 p-4 items-center justify-center gap-4">
+              <Ionicons name="calendar" size={24} color="rgba(255,255,255,0.7)" />
+              <Text className="text-white/80 font-medium ">Date and Time</Text>
+            </View>
+            <View className="border-b border-white/20 p-4 items-center justify-center gap-4">
+              <Ionicons name="pin" size={24} color="rgba(255,255,255,0.7)" />
+              <Text className="text-white/80 font-medium ">Location</Text>
+            </View>
+          </View>
         </View>
       </Container>
     </View>
